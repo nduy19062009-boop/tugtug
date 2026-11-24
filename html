@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch hoạt động CLB thể thao</title>
+    <!-- Sử dụng Tailwind CSS để tạo giao diện hiện đại, đáp ứng tốt trên mọi thiết bị -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Đảm bảo đường viền bảng hiển thị sắc nét và chuẩn xác */
+        .sport-table th, .sport-table td {
+            <!-- Các nút chức năng phụ trợ (Xem mã HTML / Sao chép mã HTML) -->
+            <div class="flex items-center gap-2">
+                <button 
+                    id="toggleCodeBtn" 
+                    onclick="toggleRawCode()" 
+                    class="px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-sm transition-colors cursor-pointer">
+                    Xem mã HTML
+                </button>
+                <button 
+                    id="copyCodeBtn" 
+                    onclick="copyRawCode()" 
+                    class="px-3.5 py-2 text-xs sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors cursor-pointer">
+                    Sao chép mã HTML
+                </button>
+            </div>
+        </div>
+
+        <!-- Hộp thông báo trạng thái sao chép (thay thế cho alert) -->
+        <div id="toastMessage" class="hidden bg-emerald-50 border-b border-emerald-200 text-emerald-700 px-6 py-2.5 text-sm font-medium text-center transition-all">
+            Đã sao chép toàn bộ mã HTML chuẩn vào bộ nhớ tạm!
+        </div>
+
+        <!-- Khu vực hiển thị bảng chính xác theo nội dung trong ảnh -->
+        <div class="p-5 sm:p-8 overflow-x-auto">
+            <table border="1" class="sport-table w-full border-collapse bg-white rounded-lg overflow-hidden">
+                <caption class="text-xl sm:text-2xl font-bold text-slate-900 mb-5 tracking-tight text-center">
+                    Lịch hoạt động CLB Thể thao
+                </caption>
+                <thead>
+                    <tr class="bg-blue-600 text-white text-center">
+                        <th rowspan="2" class="py-3.5 px-4 font-semibold text-sm sm:text-base">Bộ môn</th>
+                        <th rowspan="2" class="py-3.5 px-4 font-semibold text-sm sm:text-base">GV phụ trách</th>
+                        <th colspan="5" class="py-2.5 px-4 font-semibold text-sm sm:text-base">Ngày</th>
+                    </tr>
+                    <tr class="bg-blue-500 text-white font-semibold text-xs sm:text-sm text-center">
+                        <th class="py-2.5 px-3">Thứ 2</th>
+                        <th class="py-2.5 px-3">Thứ 3</th>
+                        <th class="py-2.5 px-3">Thứ 4</th>
+                        <th class="py-2.5 px-3">Thứ 5</th>
+                        <th class="py-2.5 px-3">Thứ 6</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm sm:text-base text-slate-800 divide-y divide-slate-200">
+                    <!-- Hàng 1: Bóng đá -->
+                    <tr class="hover:bg-blue-50/50 transition-colors">
+                        <td class="py-3.5 px-4 font-medium text-slate-900 text-left">Bóng đá</td>
+                        <td class="py-3.5 px-4 text-left">Thầy Khải</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                    </tr>
+                    <!-- Hàng 2: Bóng chuyền -->
+                    <tr class="bg-slate-50/60 hover:bg-blue-50/50 transition-colors">
+                        <td class="py-3.5 px-4 font-medium text-slate-900 text-left">Bóng chuyền</td>
+                        <td class="py-3.5 px-4 text-left">Cô Lan</td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                    </tr>
+                    <!-- Hàng 3: Bóng rổ -->
+                    <tr class="hover:bg-blue-50/50 transition-colors">
+                        <td class="py-3.5 px-4 font-medium text-slate-900 text-left">Bóng rổ</td>
+                        <td class="py-3.5 px-4 text-left">Thầy Vũ</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                    </tr>
+                    <!-- Hàng 4: Võ thuật -->
+                    <tr class="bg-slate-50/60 hover:bg-blue-50/50 transition-colors">
+                        <td class="py-3.5 px-4 font-medium text-slate-900 text-left">Võ thuật</td>
+                        <td class="py-3.5 px-4 text-left leading-relaxed">
+                            Thầy Hoàng - Karatedo<br>
+                            Thầy Đức - Taekwondo<br>
+                            Thầy Thắng - Vovinam
+                        </td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                    </tr>
+                    <!-- Hàng 5: Bơi -->
+                    <tr class="hover:bg-blue-50/50 transition-colors">
+                        <td class="py-3.5 px-4 font-medium text-slate-900 text-left">Bơi</td>
+                        <td class="py-3.5 px-4 text-left">Cô Bích</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                        <td class="py-3.5 px-3 text-center"></td>
+                        <td class="py-3.5 px-3 text-center font-bold text-blue-600">X</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Khung hiển thị mã HTML chuẩn (ẩn mặc định, mở khi bấm nút "Xem mã HTML") -->
+        <div id="rawCodeContainer" class="hidden border-t border-slate-200 bg-slate-900 p-5 sm:p-6">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Mã HTML chuẩn (Tin học 12)</span>
+            </div>
+            <pre class="text-xs sm:text-sm text-emerald-400 overflow-x-auto font-mono leading-relaxed select-all"><code id="rawCodeContent"></code></pre>
+        </div>
+    </main>
+
+    <!-- Textarea ẩn để hỗ trợ sao chép an toàn trên mọi trình duyệt/iframe -->
+    <textarea id="hiddenCopyArea" class="sr-only" aria-hidden="true"></textarea>
+
+    <script>
+        // Mã HTML chuẩn tương ứng chính xác với bảng trong hình ảnh (phù hợp bài tập Tin học 12)
+        const exactRawCode = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch hoạt động CLB Thể thao</title>
+</head>
+<body>
+    <table border="1">
+        <caption>Lịch hoạt động CLB Thể thao</caption>
+        <tr>
+            <th rowspan="2">Bộ môn</th>
+            <th rowspan="2">GV phụ trách</th>
+            <th colspan="5">Ngày</th>
+        </tr>
+        <tr>
+            <th>Thứ 2</th>
+            <th>Thứ 3</th>
+            <th>Thứ 4</th>
+            <th>Thứ 5</th>
+            <th>Thứ 6</th>
+        </tr>
+        <tr>
+            <td>Bóng đá</td>
+            <td>Thầy Khải</td>
+            <td></td>
+            <td>X</td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+        </tr>
+        <tr>
+            <td>Bóng chuyền</td>
+            <td>Cô Lan</td>
+            <td>X</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Bóng rổ</td>
+            <td>Thầy Vũ</td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Võ thuật</td>
+            <td>Thầy Hoàng - Karatedo<br>Thầy Đức - Taekwondo<br>Thầy Thắng - Vovinam</td>
+            <td>X</td>
+            <td>X</td>
+            <td></td>
+            <td>X</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Bơi</td>
+            <td>Cô Bích</td>
+            <td></td>
+            <td></td>
+            <td>X</td>
+            <td></td>
+            <td>X</td>
+        </tr>
+    </table>
+</body>
+</html>`;
+
+        // Gán nội dung vào khung hiển thị mã và textarea ẩn khi trang tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('rawCodeContent').textContent = exactRawCode;
+            document.getElementById('hiddenCopyArea').value = exactRawCode;
+        });
+
+        // Hàm bật/tắt khung xem mã HTML
+        function toggleRawCode() {
+            const container = document.getElementById('rawCodeContainer');
+            const btn = document.getElementById('toggleCodeBtn');
+            const isHidden = container.classList.contains('hidden');
+
+            if (isHidden) {
+                container.classList.remove('hidden');
+                btn.textContent = 'Ẩn mã HTML';
+            } else {
+                container.classList.add('hidden');
+                btn.textContent = 'Xem mã HTML';
+            }
+        }
+
+        // Hàm sao chép mã HTML gốc vào clipboard
+        function copyRawCode() {
+            try {
+                const copyArea = document.getElementById('hiddenCopyArea');
+                copyArea.classList.remove('sr-only');
+                copyArea.select();
+                copyArea.setSelectionRange(0, 99999);
+                document.execCommand('copy');
+                copyArea.classList.add('sr-only');
+
+                // Hiển thị thông báo thành công
+                const toast = document.getElementById('toastMessage');
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 3000);
+            } catch (err) {
+                console.error('Không thể sao chép:', err);
+            }
+        }
+    </script>
+</body>
+</html>
